@@ -49,14 +49,14 @@ export default function Home() {
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          className="border p-2 mr-2"
+          className="border p-2 mr-2 text-black"
         />
         <input
           type="text"
           placeholder="Enter your message"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
-          className="border p-2 mr-2"
+          className="border p-2 mr-2 text-black"
         />
         <button onClick={handleSubmit} className="bg-blue-500 text-white p-2">Send</button>
       </div>
