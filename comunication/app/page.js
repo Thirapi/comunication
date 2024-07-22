@@ -1,4 +1,3 @@
-// app/page.js
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -15,14 +14,14 @@ export default function Home() {
     fetchMessages();
 
     const messageListener = supabase
-      .from('messages')
-      .on('INSERT', payload => {
+      .channel('public:messages')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, payload => {
         setMessages(prevMessages => [...prevMessages, payload.new]);
       })
       .subscribe();
 
     return () => {
-      supabase.removeSubscription(messageListener);
+      supabase.removeChannel(messageListener);
     };
   }, []);
 
