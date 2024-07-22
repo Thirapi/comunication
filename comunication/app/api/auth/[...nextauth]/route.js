@@ -1,40 +1,33 @@
-import NextAuth from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials';
+import NextAuth from 'next-auth'
+import { SupabaseAdapter } from '@next-auth/supabase-adapter'
+import { SupabaseClient } from '@supabase/supabase-js'
+
+const supabase = new SupabaseClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+)
 
 export const authOptions = {
   providers: [
-    CredentialsProvider({
-      name: 'Credentials',
-      credentials: {
-        username: { label: "Username", type: "text" },
-        password: { label: "Password", type: "password" }
+    {
+      id: 'supabase',
+      name: 'Supabase',
+      type: 'oauth',
+      version: '2.0',
+      params: { grant_type: 'authorization_code' },
+      accessTokenUrl: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/token`,
+      authorizationUrl: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/authorize`,
+      profileUrl: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/userinfo`,
+      profile(profile) {
+        return { id: profile.sub, ...profile }
       },
-      async authorize(credentials) {
-        const user = { id: 1, name: 'User', email: 'user@example.com' };
-        if (user) {
-          return user;
-        } else {
-          return null;
-        }
-      }
-    })
+      clientId: process.env.SUPABASE_CLIENT_ID,
+      clientSecret: process.env.SUPABASE_CLIENT_SECRET,
+    },
   ],
-  pages: {
-    signIn: '/auth/signin',
-    signOut: '/auth/signout',
-    error: '/auth/error',
-    verifyRequest: '/auth/verify-request',
-    newUser: null
-  },
-  secret: process.env.NEXTAUTH_SECRET, // Set secret key
-  callbacks: {
-    async session({ session, token }) {
-      session.user.id = token.id;
-      return session;
-    }
-  }
-};
+  adapter: SupabaseAdapter(supabase),
+  secret: process.env.NEXTAUTH_SECRET,
+}
 
-const handler = (req, res) => NextAuth(req, res, authOptions);
-
-export { handler as GET, handler as POST };
+const handler = NextAuth(authOptions)
+export { handler as GET, handler as POST }
