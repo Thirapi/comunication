@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import supabase from '../supabaseClient';
 
 const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -12,6 +14,7 @@ const Register = () => {
       console.error(error);
     } else {
       console.log(data);
+      navigate('/chat'); // Redirect to chat after successful registration
     }
   };
 

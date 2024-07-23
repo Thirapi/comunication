@@ -18,7 +18,8 @@ const Login = () => {
     if (error) {
       console.error(error);
     } else {
-      navigate('/chat');
+      console.log(data);
+      navigate('/chat'); // Redirect to chat after successful login
     }
   };
 
