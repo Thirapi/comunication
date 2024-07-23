@@ -9,7 +9,12 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const { data, error } = await supabase.auth.signInWithPassword({ username, password });
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('username', username)
+      .eq('password', password)
+      .single();
     if (error) {
       console.error(error);
     } else {

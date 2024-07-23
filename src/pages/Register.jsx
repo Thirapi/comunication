@@ -3,20 +3,11 @@ import supabase from '../supabaseClient';
 
 const Register = () => {
   const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          username
-        }
-      }
-    });
+    const { data, error } = await supabase.from('users').insert([{ username, password }]);
     if (error) {
       console.error(error);
     } else {
@@ -32,10 +23,6 @@ const Register = () => {
           <div className="mb-4">
             <label className="block text-gray-700 mb-2" htmlFor="username">Username</label>
             <input type="text" id="username" className="w-full px-3 py-2 border rounded-lg" value={username} onChange={(e) => setUsername(e.target.value)} />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2" htmlFor="email">Email</label>
-            <input type="email" id="email" className="w-full px-3 py-2 border rounded-lg" value={email} onChange={(e) => setEmail(e.target.value)} />
           </div>
           <div className="mb-6">
             <label className="block text-gray-700 mb-2" htmlFor="password">Password</label>
