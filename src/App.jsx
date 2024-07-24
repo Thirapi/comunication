@@ -1,4 +1,3 @@
-// Suggested code may be subject to a license. Learn more: ~LicenseLog:2994220813.
 // src/App.jsx
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -9,7 +8,7 @@ import Login from './pages/Login';
 import Chat from './pages/Chat';
 
 const App = () => {
-  return (
+  return (  
     <AuthProvider>
       <Router>
         <Routes>
