@@ -20,7 +20,7 @@ const Register = () => {
     if (error) {
       console.error('Error registering user', error);
     } else {
-      navigate('/');
+      navigate('/login'); // Redirect to login after successful registration
     }
   };
 

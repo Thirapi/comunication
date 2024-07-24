@@ -18,7 +18,7 @@ const Login = () => {
       .eq('username', username)
       .single();
 
-    if (error) {
+    if (error || !user) {
       console.error('User not found', error);
       return;
     }
