@@ -46,7 +46,7 @@ const Chat = () => {
   const sendMessage = async (e) => {
     e.preventDefault();
 
-    const user = supabase.auth.user();
+    const user = supabase.auth.getUser();
     if (!user) {
       console.error('User not authenticated');
       return;
