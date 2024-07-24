@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import supabase from '../supabaseClient';
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch authenticated user
@@ -12,6 +14,7 @@ const Chat = () => {
       const { data: { user }, error } = await supabase.auth.getUser();
       if (error) {
         console.error('Error fetching user', error);
+        navigate('/'); // Redirect to login if user is not authenticated
       } else {
         setUser(user);
       }
@@ -33,7 +36,7 @@ const Chat = () => {
     return () => {
       supabase.removeChannel(subscription);
     };
-  }, []);
+  }, [navigate]);
 
   const fetchMessages = async () => {
     const { data, error } = await supabase
