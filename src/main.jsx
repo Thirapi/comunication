@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Login from './components/Login';
-import Register from './components/Register';
-import Chat from './components/Chat';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Chat from './pages/Chat';
 import './index.css';
 
 const Main = () => (
