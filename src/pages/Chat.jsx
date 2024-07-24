@@ -1,3 +1,4 @@
+// Chat.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import supabase from '../supabaseClient';
@@ -9,10 +10,9 @@ const Chat = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch authenticated user
     const getUser = async () => {
       const { data: { user }, error } = await supabase.auth.getUser();
-      if (error) {
+      if (error || !user) {
         console.error('Error fetching user', error);
         navigate('/'); // Redirect to login if user is not authenticated
       } else {
@@ -21,7 +21,6 @@ const Chat = () => {
     };
 
     getUser();
-
     fetchMessages();
 
     const subscription = supabase
