@@ -4,8 +4,21 @@ import supabase from '../supabaseClient';
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
+    // Fetch authenticated user
+    const getUser = async () => {
+      const { data: { user }, error } = await supabase.auth.getUser();
+      if (error) {
+        console.error('Error fetching user', error);
+      } else {
+        setUser(user);
+      }
+    };
+
+    getUser();
+
     fetchMessages();
 
     const subscription = supabase
@@ -46,7 +59,6 @@ const Chat = () => {
   const sendMessage = async (e) => {
     e.preventDefault();
 
-    const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       console.error('User not authenticated');
       return;
