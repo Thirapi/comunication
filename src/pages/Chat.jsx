@@ -9,14 +9,16 @@ const Chat = () => {
     fetchMessages();
 
     const subscription = supabase
-      .from('messages')
-      .on('INSERT', payload => {
-        setMessages(prevMessages => [...prevMessages, payload.new]);
+      .channel('public:messages')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, payload => {
+        if (payload.eventType === 'INSERT') {
+          setMessages(prevMessages => [...prevMessages, payload.new]);
+        }
       })
       .subscribe();
 
     return () => {
-      supabase.removeSubscription(subscription);
+      supabase.removeChannel(subscription);
     };
   }, []);
 
