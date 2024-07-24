@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import supabase from '../supabaseClient';
+import bcrypt from 'bcryptjs';
 
 const Register = () => {
   const [username, setUsername] = useState('');
@@ -9,12 +10,17 @@ const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    const { data, error } = await supabase.from('users').insert([{ username, password }]);
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const { data, error } = await supabase.from('users').insert([
+      { username, password: hashedPassword }
+    ]);
+
     if (error) {
-      console.error(error);
+      console.error('Error registering user', error);
     } else {
-      console.log(data);
-      navigate('/chat'); // Redirect to chat after successful registration
+      navigate('/');
     }
   };
 

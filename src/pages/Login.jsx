@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import supabase from '../supabaseClient';
+import bcrypt from 'bcryptjs';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -9,17 +10,26 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const { data, error } = await supabase
+
+    // Fetch the user by username
+    const { data: user, error } = await supabase
       .from('users')
       .select('*')
       .eq('username', username)
-      .eq('password', password)
       .single();
+
     if (error) {
-      console.error(error);
+      console.error('User not found', error);
+      return;
+    }
+
+    // Compare passwords
+    const match = await bcrypt.compare(password, user.password);
+    if (match) {
+      // Successful login
+      navigate('/chat');
     } else {
-      console.log(data);
-      navigate('/chat'); // Redirect to chat after successful login
+      console.error('Password mismatch');
     }
   };
 
