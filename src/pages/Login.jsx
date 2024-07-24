@@ -12,19 +12,19 @@ const Login = () => {
     e.preventDefault();
 
     // Fetch the user by username
-    const { data, error } = await supabase
+    const { data: user, error } = await supabase
       .from('users')
       .select('*')
       .eq('username', username)
       .single();
 
-    if (error || !data) {
+    if (error || !user) {
       console.error('User not found', error);
       return;
     }
 
     // Compare passwords
-    const match = await bcrypt.compare(password, data.password);
+    const match = await bcrypt.compare(password, user.password);
     if (match) {
       // Successful login
       navigate('/chat');
