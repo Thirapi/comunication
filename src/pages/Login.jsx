@@ -1,8 +1,8 @@
 // Login.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import supabase from '../supabaseClient';
 import bcrypt from 'bcryptjs';
+import supabase from '../supabaseClient';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -13,7 +13,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Fetch user data
+    // Fetch user data from the 'users' table
     const { data, error } = await supabase
       .from('users')
       .select('*')
@@ -36,9 +36,9 @@ const Login = () => {
       return;
     }
 
-    // Set session
+    // Set session using user's email
     const { error: authError } = await supabase.auth.signInWithPassword({
-      email: user.email,
+      email: user.email,  // Assuming email is stored in 'users' table
       password,
     });
 
