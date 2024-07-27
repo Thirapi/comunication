@@ -14,32 +14,28 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      // Fetch user data from the 'users' table
-      const { data, error } = await supabase
+      const { data: user, error } = await supabase
         .from('users')
         .select('*')
         .eq('username', username)
         .single();
 
-      if (error) {
+      if (error || !user) {
         setError('User not found');
         console.error('User not found', error);
         return;
       }
 
-      const user = data;
-
-      // Verify password
       const isValidPassword = await bcrypt.compare(password, user.password);
+
       if (!isValidPassword) {
         setError('Invalid password');
         console.error('Invalid password');
         return;
       }
 
-      // Set session using user's email
       const { error: authError } = await supabase.auth.signInWithPassword({
-        email: user.email,  // Assuming email is stored in 'users' table
+        email: user.email, // assuming user has an email field
         password,
       });
 
@@ -49,7 +45,6 @@ const Login = () => {
         return;
       }
 
-      // Navigate to chat
       navigate('/chat');
     } catch (err) {
       setError('An error occurred during login');
