@@ -13,43 +13,48 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Fetch user data from the 'users' table
-    const { data, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('username', username)
-      .single();
+    try {
+      // Fetch user data from the 'users' table
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('username', username)
+        .single();
 
-    if (error) {
-      setError('User not found');
-      console.error('User not found', error);
-      return;
+      if (error) {
+        setError('User not found');
+        console.error('User not found', error);
+        return;
+      }
+
+      const user = data;
+
+      // Verify password
+      const isValidPassword = await bcrypt.compare(password, user.password);
+      if (!isValidPassword) {
+        setError('Invalid password');
+        console.error('Invalid password');
+        return;
+      }
+
+      // Set session using user's email
+      const { error: authError } = await supabase.auth.signInWithPassword({
+        email: user.email,  // Assuming email is stored in 'users' table
+        password,
+      });
+
+      if (authError) {
+        setError('Error setting auth session');
+        console.error('Error setting auth session', authError);
+        return;
+      }
+
+      // Navigate to chat
+      navigate('/chat');
+    } catch (err) {
+      setError('An error occurred during login');
+      console.error('Login error', err);
     }
-
-    const user = data;
-
-    // Verify password
-    const isValidPassword = await bcrypt.compare(password, user.password);
-    if (!isValidPassword) {
-      setError('Invalid password');
-      console.error('Invalid password');
-      return;
-    }
-
-    // Set session using user's email
-    const { error: authError } = await supabase.auth.signInWithPassword({
-      email: user.email,  // Assuming email is stored in 'users' table
-      password,
-    });
-
-    if (authError) {
-      setError('Error setting auth session');
-      console.error('Error setting auth session', authError);
-      return;
-    }
-
-    // Navigate to chat
-    navigate('/chat');
   };
 
   return (
