@@ -1,19 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Chat from './pages/Chat';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import Home from './pages/Home';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 import './index.css';
 
-const Main = () => (
-  <Router>
-    <Routes>
-      <Route path="/" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/chat" element={<Chat />} />
-    </Routes>
-  </Router>
-);
+const App = () => {
+  const [user, setUser] = useState(null);
 
-ReactDOM.render(<Main />, document.getElementById('root'));
+  return (
+    <Router>
+      <Switch>
+        <Route path="/login">
+          <LoginPage setUser={setUser} />
+        </Route>
+        <Route path="/register">
+          <RegisterPage />
+        </Route>
+        <Route path="/">
+          {user ? <Home user={user} /> : <Redirect to="/login" />}
+        </Route>
+      </Switch>
+    </Router>
+  );
+};
+
+ReactDOM.render(<App />, document.getElementById('root'));
