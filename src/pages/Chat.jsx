@@ -13,7 +13,8 @@ const Chat = () => {
     const fetchMessages = async () => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/messages`);
-        setMessages(response.data);
+        // Ensure messages are in the correct order (newest first)
+        setMessages(response.data.reverse()); // Reverse the order if needed
       } catch (error) {
         console.error('Error fetching messages:', error);
       }
@@ -40,7 +41,9 @@ const Chat = () => {
 
   useEffect(() => {
     // Scroll to the bottom of the chat container
-    messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   }, [messages]);
 
   const handleSubmit = async (e) => {
