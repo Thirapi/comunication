@@ -1,19 +1,28 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/login`, { username, password });
-      console.log('Login successful:', response.data);
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/login`, 
+      { username, password }, 
+      { withCredentials: true });
+
+      if (response.data.redirect) {
+        navigate(response.data.redirect);
+      } else {
+        console.log('Login successful:', response.data);
+      }
     } catch (error) {
-      console.error('Error:', error.response.data);
-      setError(error.response.data.message);
+      console.error('Error:', error.response?.data);
+      setError(error.response?.data?.message || 'Error logging in');
     }
   };
 
