@@ -54,7 +54,7 @@ const Chat = () => {
         <div className="overflow-y-auto max-h-96 mb-4">
           {messages.map((msg) => (
             <div key={msg.id} className="mb-2">
-              <b>{msg.userId}</b>: {msg.message}
+              <b>{msg.userId}User</b>: {msg.message}
             </div>
           ))}
         </div>
