@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Pusher from 'pusher-js';
 
@@ -6,6 +6,7 @@ const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
   const [userId, setUserId] = useState(null);
+  const messageEndRef = useRef(null);
 
   useEffect(() => {
     // Fetch initial messages
@@ -37,6 +38,11 @@ const Chat = () => {
     };
   }, []);
 
+  useEffect(() => {
+    // Scroll to the bottom of the chat container
+    messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -49,14 +55,15 @@ const Chat = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-lg my-8">
+      <div className="bg-white p-8 rounded shadow-md w-full max-w-lg my-8 h-[calc(100vh-4rem)] flex flex-col">
         <h1 className="text-2xl font-bold mb-6">Chat</h1>
-        <div className="overflow-y-auto max-h-96 mb-4">
+        <div className="overflow-y-auto flex-1 mb-4">
           {messages.map((msg) => (
             <div key={msg.id} className="mb-2">
               <strong>{msg.username}</strong>: {msg.message}
             </div>
           ))}
+          <div ref={messageEndRef} />
         </div>
         <form onSubmit={handleSubmit} className="w-full">
           <input
