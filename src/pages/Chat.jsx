@@ -40,7 +40,7 @@ const Chat = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/messages`, { userId, message });
+      await axios.post(`${import.meta.env.VITE_API_URL}/messages`, { userId, message });
       setMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
