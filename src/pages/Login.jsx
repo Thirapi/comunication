@@ -11,9 +11,11 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/login`, 
-      { username, password }, 
-      { withCredentials: true });
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/users/login`,
+        { username, password },
+        { withCredentials: true } // Penting: memastikan cookies dikirim
+      );
 
       if (response.data.redirect) {
         navigate(response.data.redirect);
