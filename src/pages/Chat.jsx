@@ -5,7 +5,6 @@ import Pusher from 'pusher-js';
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
-  const [userId, setUserId] = useState(null);
   const messageEndRef = useRef(null);
 
   useEffect(() => {
@@ -40,16 +39,18 @@ const Chat = () => {
   }, []);
 
   useEffect(() => {
-    // Scroll to the bottom of the chat container
-    if (messageEndRef.current) {
-      messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
+    // Scroll to the bottom of the messages
+    messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/messages`, { userId, message });
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/messages`,
+        { message },
+        { withCredentials: true }
+      );
       setMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
@@ -57,29 +58,28 @@ const Chat = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-lg my-8 h-[calc(100vh-4rem)] flex flex-col">
-        <h1 className="text-2xl font-bold mb-6">Chat🗨</h1>
-        <div className="overflow-y-auto flex-1 mb-4">
-          {messages.map((msg) => (
-            <div key={msg.id} className="mb-2">
-              <strong>{msg.username}</strong>: {msg.message}
-            </div>
-          ))}
-          <div ref={messageEndRef} />
-        </div>
-        <form onSubmit={handleSubmit} className="w-full">
-          <input
-            type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            className="w-full px-4 py-2 border rounded-md mb-2"
-            placeholder="Type your message..."
-            required
-          />
-          <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md">Send</button>
-        </form>
+    <div className="flex flex-col h-screen">
+      <div className="flex-1 overflow-y-scroll p-4">
+        {messages.map((msg) => (
+          <div key={msg.id} className="mb-4">
+            <div className="font-bold">{msg.username}</div>
+            <div>{msg.message}</div>
+          </div>
+        ))}
+        <div ref={messageEndRef} />
       </div>
+      <form onSubmit={handleSubmit} className="p-4 bg-gray-200">
+        <input
+          type="text"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          className="w-full px-4 py-2 border rounded-md"
+          placeholder="Type a message"
+        />
+        <button type="submit" className="mt-2 w-full bg-blue-500 text-white py-2 rounded-md">
+          Send
+        </button>
+      </form>
     </div>
   );
 };
