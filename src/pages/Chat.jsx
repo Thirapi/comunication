@@ -9,17 +9,17 @@ const Chat = () => {
   const messageEndRef = useRef(null);
 
   useEffect(() => {
-    // Fetch token from localStorage or wherever it's stored
     const storedToken = localStorage.getItem('token');
     setToken(storedToken);
 
-    // Fetch initial messages
     const fetchMessages = async () => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/messages`, {
           headers: { Authorization: `Bearer ${storedToken}` }
         });
-        setMessages(response.data.reverse());
+        // Sort messages by createdAt to ensure correct order
+        const sortedMessages = response.data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        setMessages(sortedMessages);
       } catch (error) {
         console.error('Error fetching messages:', error);
       }
@@ -27,7 +27,6 @@ const Chat = () => {
 
     fetchMessages();
 
-    // Setup Pusher
     const pusher = new Pusher(import.meta.env.VITE_PUSHER_KEY, {
       cluster: import.meta.env.VITE_PUSHER_CLUSTER,
       encrypted: true,
@@ -35,7 +34,11 @@ const Chat = () => {
 
     const channel = pusher.subscribe('chat');
     channel.bind('message', (data) => {
-      setMessages((prevMessages) => [...prevMessages, data]);
+      setMessages((prevMessages) => {
+        const updatedMessages = [...prevMessages, data];
+        // Sort messages to ensure the newest message is always at the bottom
+        return updatedMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+      });
     });
 
     return () => {
@@ -53,8 +56,14 @@ const Chat = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/messages`, { message }, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/messages`, { message }, {
         headers: { Authorization: `Bearer ${token}` }
+      });
+      const newMessage = response.data;
+      setMessages((prevMessages) => {
+        const updatedMessages = [...prevMessages, newMessage];
+        // Sort messages to ensure the newest message is always at the bottom
+        return updatedMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
       });
       setMessage('');
     } catch (error) {
