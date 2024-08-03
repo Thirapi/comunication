@@ -63,17 +63,8 @@ const Chat = () => {
       });
 
       const newMessage = response.data;
-      setMessages((prevMessages) => {
-        const updatedMessages = [...prevMessages, newMessage];
-        return updatedMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-      });
 
-      // Tambahkan pesan baru secara lokal dengan username dari state
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { ...newMessage, username } // tambahkan username ke newMessage
-      ]);
-
+      // Hapus penambahan duplikat pesan secara lokal
       setMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
