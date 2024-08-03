@@ -6,14 +6,15 @@ import { useNavigate } from 'react-router-dom';
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
+  const [userId, setUserId] = useState(null);
   const messageEndRef = useRef(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
+    // Fetch initial messages
     const fetchMessages = async () => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/messages`);
-        setMessages(response.data.reverse()); // Ensure messages are in the correct order (newest first)
+        setMessages(response.data);
       } catch (error) {
         console.error('Error fetching messages:', error);
       }
@@ -21,6 +22,7 @@ const Chat = () => {
 
     fetchMessages();
 
+    // Setup Pusher
     const pusher = new Pusher(import.meta.env.VITE_PUSHER_KEY, {
       cluster: import.meta.env.VITE_PUSHER_CLUSTER,
       encrypted: true,
@@ -38,6 +40,7 @@ const Chat = () => {
   }, []);
 
   useEffect(() => {
+    // Scroll to the bottom of the chat container
     if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
@@ -46,38 +49,17 @@ const Chat = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        navigate('/login');
-        return;
-      }
-      await axios.post(
-        `${import.meta.env.VITE_API_URL}/messages`,
-        { message },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+      await axios.post(`${import.meta.env.VITE_API_URL}/messages`, { userId, message });
       setMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/');
-  };
-
   return (
     <div className="min-h-screen flex flex-col items-center bg-gray-100">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-lg my-8 h-[calc(100vh-4rem)] flex flex-col">
         <h1 className="text-2xl font-bold mb-6">Chat🗨</h1>
-        <button onClick={handleLogout} className="mb-4 bg-red-500 text-white py-2 px-4 rounded-md self-end">
-          Logout
-        </button>
         <div className="overflow-y-auto flex-1 mb-4">
           {messages.map((msg) => (
             <div key={msg.id} className="mb-2">
