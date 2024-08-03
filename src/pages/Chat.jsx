@@ -6,11 +6,15 @@ const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
   const [token, setToken] = useState(null);
+  const [username, setUsername] = useState(null); // Tambahkan state untuk username
   const messageEndRef = useRef(null);
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
+    const storedUsername = localStorage.getItem('username'); // Ambil username dari localStorage
+
     setToken(storedToken);
+    setUsername(storedUsername); // Set username
 
     const fetchMessages = async () => {
       try {
@@ -57,11 +61,19 @@ const Chat = () => {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/messages`, { message }, {
         headers: { Authorization: `Bearer ${token}` }
       });
+
       const newMessage = response.data;
       setMessages((prevMessages) => {
         const updatedMessages = [...prevMessages, newMessage];
         return updatedMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
       });
+
+      // Tambahkan pesan baru secara lokal dengan username dari state
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { ...newMessage, username } // tambahkan username ke newMessage
+      ]);
+
       setMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
