@@ -64,7 +64,9 @@ const Chat = () => {
 
       const newMessage = response.data;
 
-      // Hapus penambahan duplikat pesan secara lokal
+      // Tambahkan pesan ke state secara lokal
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+
       setMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
