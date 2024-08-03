@@ -9,17 +9,10 @@ const Chat = () => {
   const messageEndRef = useRef(null);
 
   useEffect(() => {
-    // Ambil token dari local storage
-    const token = localStorage.getItem('token');
-
     // Fetch initial messages
     const fetchMessages = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/messages`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/messages`);
         // Ensure messages are in the correct order (newest first)
         setMessages(response.data.reverse()); // Reverse the order if needed
       } catch (error) {
@@ -55,13 +48,8 @@ const Chat = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/messages`, { userId, message }, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
+      await axios.post(`${import.meta.env.VITE_API_URL}/messages`, { userId, message });
       setMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
