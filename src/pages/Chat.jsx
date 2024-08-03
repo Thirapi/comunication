@@ -5,16 +5,21 @@ import Pusher from 'pusher-js';
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
-  const [userId, setUserId] = useState(null);
+  const [token, setToken] = useState(null);
   const messageEndRef = useRef(null);
 
   useEffect(() => {
+    // Fetch token from localStorage or wherever it's stored
+    const storedToken = localStorage.getItem('token');
+    setToken(storedToken);
+
     // Fetch initial messages
     const fetchMessages = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/messages`);
-        // Ensure messages are in the correct order (newest first)
-        setMessages(response.data.reverse()); // Reverse the order if needed
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/messages`, {
+          headers: { Authorization: `Bearer ${storedToken}` }
+        });
+        setMessages(response.data.reverse());
       } catch (error) {
         console.error('Error fetching messages:', error);
       }
@@ -40,7 +45,6 @@ const Chat = () => {
   }, []);
 
   useEffect(() => {
-    // Scroll to the bottom of the chat container
     if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
@@ -49,7 +53,9 @@ const Chat = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/messages`, { userId, message });
+      await axios.post(`${import.meta.env.VITE_API_URL}/messages`, { message }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
