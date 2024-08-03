@@ -11,17 +11,11 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/users/login`,
-        { username, password },
-        { withCredentials: true } // Penting: memastikan cookies dikirim
-      );
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/login`, { username, password });
 
-      if (response.data.redirect) {
-        navigate(response.data.redirect);
-      } else {
-        console.log('Login successful:', response.data);
-      }
+      const { token } = response.data;
+      localStorage.setItem('token', token); // Simpan token di localStorage
+      navigate('/chat');
     } catch (error) {
       console.error('Error:', error.response?.data);
       setError(error.response?.data?.message || 'Error logging in');
