@@ -17,7 +17,6 @@ const Chat = () => {
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/messages`, {
           headers: { Authorization: `Bearer ${storedToken}` }
         });
-        // Sort messages by createdAt to ensure correct order
         const sortedMessages = response.data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
         setMessages(sortedMessages);
       } catch (error) {
@@ -36,7 +35,6 @@ const Chat = () => {
     channel.bind('message', (data) => {
       setMessages((prevMessages) => {
         const updatedMessages = [...prevMessages, data];
-        // Sort messages to ensure the newest message is always at the bottom
         return updatedMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
       });
     });
@@ -62,7 +60,6 @@ const Chat = () => {
       const newMessage = response.data;
       setMessages((prevMessages) => {
         const updatedMessages = [...prevMessages, newMessage];
-        // Sort messages to ensure the newest message is always at the bottom
         return updatedMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
       });
       setMessage('');
