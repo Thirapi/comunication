@@ -8,7 +8,6 @@ const Chat = () => {
   const [token, setToken] = useState(null);
   const [username, setUsername] = useState(null); // Tambahkan state untuk username
   const messageEndRef = useRef(null);
-  const [localMessages, setLocalMessages] = useState([]); // Tambahkan state untuk pesan lokal
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
@@ -39,10 +38,6 @@ const Chat = () => {
     const channel = pusher.subscribe('chat');
     channel.bind('message', (data) => {
       setMessages((prevMessages) => {
-        // Cek apakah pesan sudah ada di state
-        if (prevMessages.find(msg => msg.id === data.id)) {
-          return prevMessages;
-        }
         const updatedMessages = [...prevMessages, data];
         return updatedMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
       });
@@ -63,33 +58,13 @@ const Chat = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const tempId = `temp-${Date.now()}`; // ID sementara untuk pesan yang baru saja dikirim
-      const newMessage = {
-        id: tempId,
-        username, // atau userId tergantung data Anda
-        message,
-        created_at: new Date().toISOString()
-      };
-
-      // Tambahkan pesan ke state secara lokal dengan ID sementara
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-      setLocalMessages((prevLocalMessages) => [...prevLocalMessages, tempId]);
-
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/messages`, { message }, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      // Update pesan dengan ID dari server
-      setMessages((prevMessages) =>
-        prevMessages.map((msg) =>
-          msg.id === tempId ? { ...msg, id: response.data.id } : msg
-        )
-      );
+      const newMessage = response.data;
 
-      setLocalMessages((prevLocalMessages) =>
-        prevLocalMessages.filter((msgId) => msgId !== tempId)
-      );
-
+      // Hapus penambahan duplikat pesan secara lokal
       setMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
