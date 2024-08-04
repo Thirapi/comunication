@@ -71,10 +71,16 @@ const Chat = () => {
     }
   };
 
+    const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/');
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center bg-gray-100">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-lg my-8 h-[calc(100vh-4rem)] flex flex-col">
         <h1 className="text-2xl font-bold mb-6">Chat🗨</h1>
+        <button onClick={handleLogout} className="mb-4 bg-red-500 text-white py-2 px-4 rounded-md self-end"></button>
         <div className="overflow-y-auto flex-1 mb-4">
           {messages.map((msg) => (
             <div key={msg.id} className="mb-2">
