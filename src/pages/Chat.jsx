@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Pusher from 'pusher-js';
 import { useNavigate } from 'react-router-dom';
+import image from '/src/assets/image.png';
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -79,7 +80,7 @@ const Chat = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gray-100"
+    <div className="min-h-screen flex flex-col items-center bg-slate-700"
     style={{
       backgroundImage: `url(${image})`,
       backgroundSize: 'cover',
