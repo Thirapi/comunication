@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import image from '/src/assets/image.png';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -23,7 +24,14 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-700" style="background-image: url('/src/assets/image.png';); background-size: cover; background-position: center center; background-attachment: fixed;">
+    <div 
+    className="min-h-screen flex items-center justify-center bg-slate-700"
+    style={{
+      backgroundImage: `url(${image})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center center',
+      backgroundAttachment: 'fixed'
+    }}>
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
         <h1 className="text-2xl font-bold mb-6">Login</h1>
         {error && <div className="text-red-500 mb-4">{error}</div>}
