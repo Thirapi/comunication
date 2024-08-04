@@ -87,8 +87,8 @@ const Chat = () => {
       backgroundPosition: 'center center',
       backgroundAttachment: 'fixed'
     }}>
-      <div className="bg-slate-800 text-white p-8 rounded shadow-md w-full max-w-lg my-8 h-[calc(100vh-4rem)] border-solid border-slate-300 border-2 shadow-lg rounded-md flex flex-col">
-        <div className="flex justify-between items-center mb-6 bg-slate-300 text-slate-900">
+      <div className="bg-slate-800 text-white rounded shadow-md w-full max-w-lg my-8 h-[calc(100vh-4rem)] border-solid border-slate-300 border-2 shadow-lg rounded-md flex flex-col">
+        <div className="flex justify-between items-center mb-6 text-white">
           <h1 className="text-2xl font-bold">Komunikasi</h1>
           <button
             onClick={handleLogout}
@@ -97,7 +97,7 @@ const Chat = () => {
             Logout
           </button>
         </div>
-        <div className="overflow-y-auto flex-1 mb-4">
+        <div className="overflow-y-auto flex-1 p-8 mb-4">
           {messages.map((msg) => (
             <div key={msg.id} className="mb-2">
               <strong>{msg.username}</strong>: {msg.message}
