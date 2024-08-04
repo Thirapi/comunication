@@ -79,7 +79,13 @@ const Chat = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gray-100">
+    <div className="min-h-screen flex flex-col items-center bg-gray-100"
+    style={{
+      backgroundImage: `url(${image})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center center',
+      backgroundAttachment: 'fixed'
+    }}>
       <div className="bg-white p-8 rounded shadow-md w-full max-w-lg my-8 h-[calc(100vh-4rem)] flex flex-col">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Komunikasi</h1>
