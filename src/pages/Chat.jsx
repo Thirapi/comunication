@@ -8,6 +8,7 @@ const Chat = () => {
   const [token, setToken] = useState(null);
   const [username, setUsername] = useState(null); // Tambahkan state untuk username
   const messageEndRef = useRef(null);
+  const navigate = useNavigate(); // Use navigate hook
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
@@ -71,9 +72,9 @@ const Chat = () => {
     }
   };
 
-    const handleLogout = () => {
+  const handleLogout = () => {
     localStorage.removeItem('token');
-    navigate('/');
+    navigate('/'); // Navigate to login or home page after logout
   };
 
   return (
