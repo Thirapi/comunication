@@ -87,7 +87,7 @@ const Chat = () => {
       backgroundPosition: 'center center',
       backgroundAttachment: 'fixed'
     }}>
-      <div className="bg-slate-800 p-8 rounded shadow-md w-full max-w-lg my-8 h-[calc(100vh-4rem)] border-solid border-slate-300 border-2 shadow-lg rounded-md flex flex-col">
+      <div className="bg-slate-800 text-white p-8 rounded shadow-md w-full max-w-lg my-8 h-[calc(100vh-4rem)] border-solid border-slate-300 border-2 shadow-lg rounded-md flex flex-col">
         <div className="flex justify-between items-center mb-6 bg-slate-300 text-slate-900">
           <h1 className="text-2xl font-bold">Komunikasi</h1>
           <button
