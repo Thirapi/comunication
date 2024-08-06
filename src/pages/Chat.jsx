@@ -110,7 +110,7 @@ const Chat = () => {
             type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            className="w-full px-4 py-2 border rounded-md mb-2"
+            className="w-full px-4 py-2 text-black border rounded-md mb-2"
             placeholder="Type your message..."
             required
           />
