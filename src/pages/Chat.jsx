@@ -92,7 +92,7 @@ const Chat = () => {
           <h1 className="text-2xl font-bold">Komunikasi</h1>
           <button
             onClick={handleLogout}
-            className="text-rose-800 py-2 px-4 border border-rose-800 rounded-md hover:bg-rose-500 hover:text-white transition-colors"
+            className="text-rose-800 py-2 px-4 border border-rose-800 rounded-md hover:bg-rose-800 hover:text-white transition-colors"
           >
             Logout
           </button>
