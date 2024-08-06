@@ -32,8 +32,8 @@ const Login = () => {
       backgroundPosition: 'center center',
       backgroundAttachment: 'fixed'
     }}>
-      <div className="bg-slate-800 text-white p-8 rounded shadow-md w-full max-w-md border-solid border-slate-300 border-2">
-        <h1 className="text-2xl font-bold mb-6">Login</h1>
+      <div className="bg-slate-800 p-8 rounded shadow-md w-full max-w-md border-solid border-slate-300 border-2">
+        <h1 className="text-2xl text-white font-bold mb-6">Login</h1>
         {error && <div className="text-red-500 mb-4">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
