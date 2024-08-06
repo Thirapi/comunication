@@ -3,6 +3,7 @@ import axios from 'axios';
 import Pusher from 'pusher-js';
 import { useNavigate } from 'react-router-dom';
 import image from '/src/assets/image.png';
+import dayjs from 'dayjs';
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -98,9 +99,18 @@ const Chat = () => {
           </button>
         </div>
         <div className="overflow-y-auto flex-1 mb-4">
-          {messages.map((msg) => (
+          {/* {messages.map((msg) => (
             <div key={msg.id} className="mb-2">
               <strong>{msg.username}</strong>: {msg.message}
+            </div>
+          ))} */}
+          {messages.map((msg) => (
+            <div key={msg.id} className="mb-4">
+              <div className="flex items-center mb-1">
+                <strong className="mr-2">{msg.username}</strong>
+                <span className="text-gray-500 text-sm">{dayjs(msg.created_at).format('DD/MM/YYYY h:mm A')}</span>
+              </div>
+              <div>{msg.message}</div>
             </div>
           ))}
           <div ref={messageEndRef} />
