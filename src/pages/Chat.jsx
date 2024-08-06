@@ -4,6 +4,7 @@ import Pusher from 'pusher-js';
 import { useNavigate } from 'react-router-dom';
 import image from '/src/assets/image.png';
 import dayjs from 'dayjs';
+import { FaPaperPlane } from 'react-icons/fa';
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -115,7 +116,7 @@ const Chat = () => {
           ))}
           <div ref={messageEndRef} />
         </div>
-        <form onSubmit={handleSubmit} className="w-full">
+        {/* <form onSubmit={handleSubmit} className="w-full">
           <input
             type="text"
             value={message}
@@ -124,7 +125,20 @@ const Chat = () => {
             placeholder="Type your message..."
             required
           />
-          <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md">Send</button>
+          <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md">➣</button>
+        </form> */}
+        <form onSubmit={handleSubmit} className="w-full flex items-center">
+          <input
+            type="text"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            className="flex-grow px-4 py-2 text-black border rounded-full mb-2 mr-2"
+            placeholder="Type your message..."
+            required
+          />
+          <button type="submit" className="bg-blue-500 text-white p-3 rounded-full mb-2">
+            <FaPaperPlane />
+          </button>
         </form>
       </div>
     </div>
