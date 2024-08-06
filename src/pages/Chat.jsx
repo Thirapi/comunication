@@ -105,7 +105,7 @@ const Chat = () => {
             </div>
           ))} */}
           {messages.map((msg) => (
-            <div key={msg.id} className="mb-4 p-2 rounded transition-colors duration-200 hover:bg-gray-200">
+            <div key={msg.id} className="mb-4 p-2 rounded transition-colors duration-200 hover:bg-slate-900">
               <div className="flex items-center mb-1">
                 <strong className="mr-2">{msg.username}</strong>
                 <span className="text-gray-500 text-sm">{dayjs(msg.created_at).format('DD/MM/YYYY h:mm A')}</span>
