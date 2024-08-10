@@ -6,9 +6,6 @@ module.exports = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        'conic-gradient': 'conic-gradient(from 90deg at 50% 50%, #f54180 0%, #338ef7 50%, #f54180 100%)',
-      },
     },
   },
   plugins: [],
