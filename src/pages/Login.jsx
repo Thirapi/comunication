@@ -56,7 +56,9 @@ const Login = () => {
               required
             />
           </div>
-          <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md">Login</button>
+          <button type="submit" className="relative w-full py-2 rounded-md text-white bg-blue-500 border-4 border-transparent before:absolute before:inset-0 before:-z-10 before:bg-conic-gradient before:rounded-md">
+            Login
+          </button>
         </form>
       </div>
     </div>
