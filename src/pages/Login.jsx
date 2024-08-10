@@ -56,7 +56,7 @@ const Login = () => {
               required
             />
           </div>
-          <button type="submit" className="relative text-white font-semibold w-full py-2 px-4 rounded-md border-2 border-transparent bg-transparent before:absolute before:inset-0 before:rounded-md before:bg-gradient-to-r before:from-green-400 before:via-purple-500 before:to-red-600 before:z-0 before:border before:border-transparent hover:bg-gradient-to-r hover:from-green-400 hover:via-purple-500 hover:to-red-600 hover:text-white">
+          <button className="relative text-white font-semibold w-full py-2 px-4 rounded-md border-2 border-transparent bg-transparent bg-gradient-to-r from-green-400 via-purple-500 to-red-600 bg-origin-border hover:bg-origin-border hover:bg-clip-padding hover:bg-gradient-to-r hover:from-green-400 hover:via-purple-500 hover:to-red-600">
             <span className="relative z-10">Login bro</span>
           </button>
         </form>
