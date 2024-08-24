@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import image from '/src/assets/image.png';
 import dayjs from 'dayjs';
 // import { FaPaperPlane, FaReply } from 'react-icons/fa';
-import { FiCornerUpLeft, FiSend, FiCornerLeftUp } from "react-icons/fi";
+import { FiCornerUpLeft, FiSend, FiCornerDownRight } from "react-icons/fi";
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -129,7 +129,7 @@ const Chat = () => {
                 </div>
                 {msg.reply_to_message && (
                   <div className="bg-slate-700 py-1 rounded mb-2 text-sm flex items-center">
-                    <FiCornerLeftUp className="mr-2" />
+                    <FiCornerDownRight className="mr-2" />
                     <strong className="mr-1">{msg.reply_to_username}:</strong>
                     <span>{msg.reply_to_message}</span>
                   </div>
