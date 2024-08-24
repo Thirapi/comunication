@@ -123,11 +123,11 @@ const Chat = () => {
                   onClick={() => handleReply(msg)} 
                   className="text-sm text-white flex items-center"
                 >
-                  <FaReply className="ml-2" /> Reply
+                  <FaReply className="ml-2" /> balas
                 </button>
                 </div>
                 {msg.reply_to_message && (
-                  <div className="py-2 rounded mb-2 text-sm">
+                  <div className="bg-slate-700 py-1 rounded mb-2 text-sm">
                     <strong>{msg.reply_to_username}:</strong> {msg.reply_to_message}
                   </div>
                 )}
