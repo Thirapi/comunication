@@ -89,7 +89,7 @@ const Chat = () => {
         backgroundPosition: 'center center',
         backgroundAttachment: 'fixed'
       }}>
-      <div className="bg-slate-800 text-white rounded shadow-md p-8 w-full max-w-lg my-8 h-[calc(100vh-4rem)] border-solid border-slate-300 border-2 shadow-lg rounded-md flex flex-col">
+      <div className="bg-slate-800 text-white rounded shadow-md p-8 w-full mx-auto max-w-4xl my-8 h-[calc(100vh-4rem)] border-solid border-slate-300 border-2 shadow-lg rounded-md flex flex-col">
         <div className="flex justify-between items-center mb-6 text-white">
           <h1 className="text-2xl font-bold">Komunikasi</h1>
           <button
@@ -112,7 +112,7 @@ const Chat = () => {
             ))}
             <div ref={messageEndRef} />
           </div>
-          <form onSubmit={handleSubmit} className="w-full flex items-center p-2 bg-slate-700">
+          <form onSubmit={handleSubmit} className="w-full flex items-center p-2">
             <input
               type="text"
               value={message}
