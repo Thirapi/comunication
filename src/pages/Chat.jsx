@@ -4,7 +4,8 @@ import Pusher from 'pusher-js';
 import { useNavigate } from 'react-router-dom';
 import image from '/src/assets/image.png';
 import dayjs from 'dayjs';
-import { FaPaperPlane, FaReply } from 'react-icons/fa';
+// import { FaPaperPlane, FaReply } from 'react-icons/fa';
+import { FiCornerUpLeft, FiSend } from "react-icons/fi";
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -123,7 +124,7 @@ const Chat = () => {
                   onClick={() => handleReply(msg)} 
                   className="text-sm text-white flex items-center"
                 >
-                  <FaReply className="ml-2" /> balas
+                  <FiCornerUpLeft className="ml-2" /> balas
                 </button>
                 </div>
                 {msg.reply_to_message && (
@@ -157,7 +158,7 @@ const Chat = () => {
               required
             />
             <button type="submit" className="bg-blue-500 text-white p-3 rounded-full">
-              <FaPaperPlane />
+              <FiSend />
             </button>
           </form>
         </div>
