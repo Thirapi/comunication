@@ -121,9 +121,9 @@ const Chat = () => {
                   <span className="text-gray-500 text-sm">{dayjs(msg.created_at).format('DD/MM/YYYY h:mm A')}</span>
                   <button 
                   onClick={() => handleReply(msg)} 
-                  className="text-sm text-white flex mr-2 items-center"
+                  className="text-sm text-white flex items-center"
                 >
-                  <FaReply className="mr-1" /> Reply
+                  <FaReply className="mr-3" /> Reply
                 </button>
                 </div>
                 {msg.reply_to_message && (
