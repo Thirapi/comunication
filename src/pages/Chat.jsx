@@ -4,11 +4,12 @@ import Pusher from 'pusher-js';
 import { useNavigate } from 'react-router-dom';
 import image from '/src/assets/image.png';
 import dayjs from 'dayjs';
-import { FaPaperPlane } from 'react-icons/fa';
+import { FaPaperPlane, FaReply } from 'react-icons/fa';
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
+  const [replyTo, setReplyTo] = useState(null); // State untuk pesan yang dibalas
   const [token, setToken] = useState(null);
   const [username, setUsername] = useState(null); // Tambahkan state untuk username
   const messageEndRef = useRef(null);
@@ -63,14 +64,18 @@ const Chat = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/messages`, { message }, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/messages`, { 
+        message, 
+        replyTo: replyTo ? replyTo.id : null  // Kirim ID pesan yang sedang dibalas, jika ada
+      }, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
       const newMessage = response.data;
 
-      // Hapus penambahan duplikat pesan secara lokal
+      // Reset input dan replyTo setelah mengirim pesan
       setMessage('');
+      setReplyTo(null);
     } catch (error) {
       console.error('Error sending message:', error);
     }
@@ -79,6 +84,14 @@ const Chat = () => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     navigate('/'); // Navigate to login or home page after logout
+  };
+
+  const handleReply = (msg) => {
+    setReplyTo(msg); // Set pesan yang sedang dibalas
+  };
+
+  const handleCancelReply = () => {
+    setReplyTo(null); // Batalkan balasan
   };
 
   return (
@@ -107,11 +120,33 @@ const Chat = () => {
                   <strong className="mr-2">{msg.username}</strong>
                   <span className="text-gray-500 text-sm">{dayjs(msg.created_at).format('DD/MM/YYYY h:mm A')}</span>
                 </div>
+                {msg.reply_to_message && (
+                  <div className="bg-slate-700 p-2 rounded mb-2 text-sm">
+                    <strong>{msg.reply_to_username}:</strong> {msg.reply_to_message}
+                  </div>
+                )}
                 <div>{msg.message}</div>
+                <button 
+                  onClick={() => handleReply(msg)} 
+                  className="text-sm text-blue-400 hover:underline mt-1 flex items-center"
+                >
+                  <FaReply className="mr-1" /> Balas
+                </button>
               </div>
             ))}
             <div ref={messageEndRef} />
           </div>
+          {replyTo && (
+            <div className="bg-slate-700 p-2 mb-2 rounded text-sm">
+              Membalas <strong>{replyTo.username}</strong>: {replyTo.message}
+              <button 
+                onClick={handleCancelReply} 
+                className="text-sm text-red-400 hover:underline ml-2"
+              >
+                Batalkan
+              </button>
+            </div>
+          )}
           <form onSubmit={handleSubmit} className="w-full flex items-center p-2">
             <input
               type="text"
