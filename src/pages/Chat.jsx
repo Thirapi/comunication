@@ -127,7 +127,7 @@ const Chat = () => {
                 </button>
                 </div>
                 {msg.reply_to_message && (
-                  <div className="bg-slate-700 p-2 rounded mb-2 text-sm">
+                  <div className="py-2 rounded mb-2 text-sm">
                     <strong>{msg.reply_to_username}:</strong> {msg.reply_to_message}
                   </div>
                 )}
