@@ -119,6 +119,12 @@ const Chat = () => {
                 <div className="flex items-center mb-1">
                   <strong className="mr-2">{msg.username}</strong>
                   <span className="text-gray-500 text-sm">{dayjs(msg.created_at).format('DD/MM/YYYY h:mm A')}</span>
+                  <button 
+                  onClick={() => handleReply(msg)} 
+                  className="text-sm text-blue-400 hover:underline mt-1 flex items-center"
+                >
+                  <FaReply className="mr-1" /> Balas
+                </button>
                 </div>
                 {msg.reply_to_message && (
                   <div className="bg-slate-700 p-2 rounded mb-2 text-sm">
@@ -126,12 +132,6 @@ const Chat = () => {
                   </div>
                 )}
                 <div>{msg.message}</div>
-                <button 
-                  onClick={() => handleReply(msg)} 
-                  className="text-sm text-blue-400 hover:underline mt-1 flex items-center"
-                >
-                  <FaReply className="mr-1" /> Balas
-                </button>
               </div>
             ))}
             <div ref={messageEndRef} />
