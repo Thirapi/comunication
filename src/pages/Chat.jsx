@@ -123,7 +123,7 @@ const Chat = () => {
                   onClick={() => handleReply(msg)} 
                   className="text-sm text-white flex items-center"
                 >
-                  <FaReply className="mr-3" /> Reply
+                  <FaReply className="ml-2" /> Reply
                 </button>
                 </div>
                 {msg.reply_to_message && (
