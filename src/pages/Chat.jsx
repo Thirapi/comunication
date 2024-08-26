@@ -25,8 +25,8 @@ const Chat = () => {
 
     const fetchMessages = async () => {
       try {
-        const response = await axios.get(${import.meta.env.VITE_API_URL}/messages, {
-          headers: { Authorization: Bearer ${storedToken} }
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/messages`, {
+          headers: { Authorization: `Bearer ${storedToken}` }
         });
         const sortedMessages = response.data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
         setMessages(sortedMessages);
@@ -65,11 +65,11 @@ const Chat = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(${import.meta.env.VITE_API_URL}/messages, { 
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/messages`, { 
         message, 
         replyTo: replyTo ? replyTo.id : null  // Kirim ID pesan yang sedang dibalas, jika ada
       }, {
-        headers: { Authorization: Bearer ${token} }
+        headers: { Authorization: `Bearer ${token}` }
       });
 
       const newMessage = response.data;
@@ -98,7 +98,7 @@ const Chat = () => {
   return (
     <div className="min-h-screen flex flex-col items-center bg-slate-900"
       style={{
-        backgroundImage: url(${image}),
+        backgroundImage: `url(${image})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center center',
         backgroundAttachment: 'fixed'
