@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import image from '/src/assets/image.png';
 
 const Register = () => {
   const [username, setUsername] = useState('');
@@ -18,13 +20,19 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6">Register</h1>
+    <div className="min-h-screen flex items-center justify-center bg-slate-900"
+    style={{
+      backgroundImage: `url(${image})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center center',
+      backgroundAttachment: 'fixed'
+    }}>
+      <div className="bg-slate-800 p-8 rounded shadow-md w-full max-w-md border-solid border-slate-300 border-2">
+        <h1 className="text-2xl text-white font-bold mb-6">Register</h1>
         {error && <div className="text-red-500 mb-4">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-700">Username</label>
+            <label className="block text-white">Username</label>
             <input
               type="text"
               value={username}
@@ -34,7 +42,7 @@ const Register = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Password</label>
+            <label className="block text-white">Password</label>
             <input
               type="password"
               value={password}
