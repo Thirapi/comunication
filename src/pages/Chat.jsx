@@ -4,17 +4,19 @@ import Pusher from 'pusher-js';
 import { useNavigate } from 'react-router-dom';
 import image from '/src/assets/image.png';
 import dayjs from 'dayjs';
-// import { FaPaperPlane, FaReply } from 'react-icons/fa';
-import { FiCornerUpLeft, FiSend, FiCornerDownRight } from "react-icons/fi";
+import { FaPaperPlane, FaRegSmile } from 'react-icons/fa';
+import { FiCornerUpLeft, FiSend, FiCornerDownRight } from 'react-icons/fi';
+import { EmojiPicker } from 'emoji-picker-react'; // Pustaka emoji picker
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
   const [replyTo, setReplyTo] = useState(null); // State untuk pesan yang dibalas
   const [token, setToken] = useState(null);
-  const [username, setUsername] = useState(null); // Tambahkan state untuk username
+  const [username, setUsername] = useState(null); // State untuk username
+  const [emojiPickerVisible, setEmojiPickerVisible] = useState(false); // State untuk menampilkan emoji picker
   const messageEndRef = useRef(null);
-  const navigate = useNavigate(); // Use navigate hook
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
@@ -65,14 +67,12 @@ const Chat = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/messages`, { 
+      await axios.post(`${import.meta.env.VITE_API_URL}/messages`, { 
         message, 
         replyTo: replyTo ? replyTo.id : null  // Kirim ID pesan yang sedang dibalas, jika ada
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
-
-      const newMessage = response.data;
 
       // Reset input dan replyTo setelah mengirim pesan
       setMessage('');
@@ -93,6 +93,11 @@ const Chat = () => {
 
   const handleCancelReply = () => {
     setReplyTo(null); // Batalkan balasan
+  };
+
+  const handleEmojiClick = (emoji) => {
+    setMessage((prevMessage) => prevMessage + emoji.emoji);
+    setEmojiPickerVisible(false);
   };
 
   return (
@@ -119,13 +124,13 @@ const Chat = () => {
               <div key={msg.id} className="mb-4 p-2 rounded transition-colors duration-200 hover:bg-slate-900">
                 <div className="flex items-center mb-1">
                   <strong className="mr-2">{msg.username}</strong>
-                  <span className="text-gray-500 text-sm">{dayjs(msg.created_at).format('DD/MM/YYYY h:mm A')}</span>
+                  <span className="text-gray-500 text-sm">{dayjs(msg.createdAt).format('DD/MM/YYYY h:mm A')}</span>
                   <button 
-                  onClick={() => handleReply(msg)} 
-                  className="text-sm text-white flex items-center"
-                >
-                  <FiCornerUpLeft className="ml-2" /> balas
-                </button>
+                    onClick={() => handleReply(msg)} 
+                    className="text-sm text-white flex items-center ml-2"
+                  >
+                    <FiCornerUpLeft className="ml-2" /> balas
+                  </button>
                 </div>
                 {msg.reply_to_message && (
                   <div className="bg-slate-700 py-1 rounded mb-2 text-sm flex items-center">
@@ -135,12 +140,24 @@ const Chat = () => {
                   </div>
                 )}
                 <div>{msg.message}</div>
+                {/* Render reactions */}
+                <div className="flex items-center mt-2">
+                  {msg.reactions && Object.entries(msg.reactions).map(([emoji, count]) => (
+                    <div key={emoji} className="flex items-center mr-2">
+                      <span className="text-xl">{emoji}</span>
+                      <span className="ml-1 text-sm">{count}</span>
+                    </div>
+                  ))}
+                  <button onClick={() => setEmojiPickerVisible(!emojiPickerVisible)}>
+                    <FaRegSmile />
+                  </button>
+                </div>
               </div>
             ))}
             <div ref={messageEndRef} />
           </div>
           {replyTo && (
-            <div className="bg-slate-700 p-2 mb-2 rounded text-sm">
+            <div className="bg-slate-700 p-2 mb-2 rounded text-sm flex items-center">
               Membalas <strong>{replyTo.username}</strong>: {replyTo.message}
               <button 
                 onClick={handleCancelReply} 
@@ -160,13 +177,14 @@ const Chat = () => {
               required
             />
             <button type="submit" className="bg-blue-500 text-white p-3 rounded-full">
-              <FiSend />
+              <FaPaperPlane />
             </button>
           </form>
+          {emojiPickerVisible && <EmojiPicker onEmojiClick={handleEmojiClick} />}
         </div>
       </div>
     </div>
-  );  
+  );
 };
 
 export default Chat;
