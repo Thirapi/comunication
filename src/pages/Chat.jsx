@@ -6,7 +6,7 @@ import image from '/src/assets/image.png';
 import dayjs from 'dayjs';
 import { FaPaperPlane, FaRegSmile } from 'react-icons/fa';
 import { FiCornerUpLeft, FiSend, FiCornerDownRight } from 'react-icons/fi';
-import { EmojiPicker } from 'emoji-picker-react'; // Pustaka emoji picker
+import Picker from 'emoji-picker-react'; // Ubah dari EmojiPicker ke Picker
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -180,7 +180,7 @@ const Chat = () => {
               <FaPaperPlane />
             </button>
           </form>
-          {emojiPickerVisible && <EmojiPicker onEmojiClick={handleEmojiClick} />}
+          {emojiPickerVisible && <Picker onEmojiClick={handleEmojiClick} />}
         </div>
       </div>
     </div>
