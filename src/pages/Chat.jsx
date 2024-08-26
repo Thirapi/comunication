@@ -6,8 +6,7 @@ import image from '/src/assets/image.png';
 import dayjs from 'dayjs';
 import { FaPaperPlane, FaRegSmile } from 'react-icons/fa';
 import { FiCornerUpLeft, FiSend, FiCornerDownRight } from 'react-icons/fi';
-import { Picker } from 'emoji-mart'; // Import Picker dari emoji-mart
-import 'emoji-mart/css/emoji-mart.css'; // Import CSS untuk emoji-mart
+import { EmojiPicker } from 'emoji-picker-react'; // Pustaka emoji picker
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -97,7 +96,7 @@ const Chat = () => {
   };
 
   const handleEmojiClick = (emoji) => {
-    setMessage((prevMessage) => prevMessage + emoji.native); // Gunakan emoji.native untuk menambahkan emoji ke pesan
+    setMessage((prevMessage) => prevMessage + emoji.emoji);
     setEmojiPickerVisible(false);
   };
 
@@ -181,7 +180,7 @@ const Chat = () => {
               <FaPaperPlane />
             </button>
           </form>
-          {emojiPickerVisible && <Picker onSelect={handleEmojiClick} />} {/* Gunakan Picker dari emoji-mart */}
+          {emojiPickerVisible && <EmojiPicker onEmojiClick={handleEmojiClick} />}
         </div>
       </div>
     </div>
