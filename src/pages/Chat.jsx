@@ -6,7 +6,7 @@ import image from '/src/assets/image.png';
 import dayjs from 'dayjs';
 import { FaPaperPlane, FaRegSmile } from 'react-icons/fa';
 import { FiCornerUpLeft, FiSend, FiCornerDownRight } from 'react-icons/fi';
-import Picker from 'emoji-picker-react'; // Ubah dari EmojiPicker ke Picker
+// import Picker from 'emoji-picker-react'; // Ubah dari EmojiPicker ke Picker
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -141,7 +141,7 @@ const Chat = () => {
                 )}
                 <div>{msg.message}</div>
                 {/* Render reactions */}
-                <div className="flex items-center mt-2">
+                {/* <div className="flex items-center mt-2">
                   {msg.reactions && Object.entries(msg.reactions).map(([emoji, count]) => (
                     <div key={emoji} className="flex items-center mr-2">
                       <span className="text-xl">{emoji}</span>
@@ -151,7 +151,7 @@ const Chat = () => {
                   <button onClick={() => setEmojiPickerVisible(!emojiPickerVisible)}>
                     <FaRegSmile />
                   </button>
-                </div>
+                </div> */}
               </div>
             ))}
             <div ref={messageEndRef} />
