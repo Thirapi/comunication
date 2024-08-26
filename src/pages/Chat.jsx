@@ -5,25 +5,26 @@ import { useNavigate } from 'react-router-dom';
 import image from '/src/assets/image.png';
 import dayjs from 'dayjs';
 import { FaPaperPlane, FaRegSmile } from 'react-icons/fa';
-import { FiCornerUpLeft, FiSend, FiCornerDownRight } from 'react-icons/fi';
-// import Picker from 'emoji-picker-react'; // Ubah dari EmojiPicker ke Picker
+import { FiCornerUpLeft, FiCornerDownRight } from 'react-icons/fi';
+import Picker from 'emoji-picker-react';
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
-  const [replyTo, setReplyTo] = useState(null); // State untuk pesan yang dibalas
+  const [replyTo, setReplyTo] = useState(null);
   const [token, setToken] = useState(null);
-  const [username, setUsername] = useState(null); // State untuk username
-  const [emojiPickerVisible, setEmojiPickerVisible] = useState(false); // State untuk menampilkan emoji picker
+  const [username, setUsername] = useState(null);
+  const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
+  const [selectedMessageId, setSelectedMessageId] = useState(null);
   const messageEndRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
-    const storedUsername = localStorage.getItem('username'); // Ambil username dari localStorage
+    const storedUsername = localStorage.getItem('username');
 
     setToken(storedToken);
-    setUsername(storedUsername); // Set username
+    setUsername(storedUsername);
 
     const fetchMessages = async () => {
       try {
@@ -52,6 +53,16 @@ const Chat = () => {
       });
     });
 
+    channel.bind('reaction', (data) => {
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) =>
+          msg.id === data.messageId
+            ? { ...msg, reactions: [...(msg.reactions || []), data.reaction] }
+            : msg
+        )
+      );
+    });
+
     return () => {
       channel.unbind_all();
       channel.unsubscribe();
@@ -67,14 +78,13 @@ const Chat = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/messages`, { 
-        message, 
-        replyTo: replyTo ? replyTo.id : null  // Kirim ID pesan yang sedang dibalas, jika ada
+      await axios.post(`${import.meta.env.VITE_API_URL}/messages`, {
+        message,
+        replyTo: replyTo ? replyTo.id : null
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      // Reset input dan replyTo setelah mengirim pesan
       setMessage('');
       setReplyTo(null);
     } catch (error) {
@@ -84,20 +94,34 @@ const Chat = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    navigate('/'); // Navigate to login or home page after logout
+    navigate('/');
   };
 
   const handleReply = (msg) => {
-    setReplyTo(msg); // Set pesan yang sedang dibalas
+    setReplyTo(msg);
   };
 
   const handleCancelReply = () => {
-    setReplyTo(null); // Batalkan balasan
+    setReplyTo(null);
   };
 
-  const handleEmojiClick = (emoji) => {
-    setMessage((prevMessage) => prevMessage + emoji.emoji);
-    setEmojiPickerVisible(false);
+  const handleEmojiClick = async (emoji) => {
+    try {
+      await axios.post(`${import.meta.env.VITE_API_URL}/reactions`, {
+        emoji: emoji.emoji,
+        messageId: selectedMessageId
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setEmojiPickerVisible(false);
+    } catch (error) {
+      console.error('Error adding reaction:', error);
+    }
+  };
+
+  const toggleEmojiPicker = (messageId) => {
+    setSelectedMessageId(messageId);
+    setEmojiPickerVisible(!emojiPickerVisible);
   };
 
   return (
@@ -140,18 +164,17 @@ const Chat = () => {
                   </div>
                 )}
                 <div>{msg.message}</div>
-                {/* Render reactions */}
-                {/* <div className="flex items-center mt-2">
-                  {msg.reactions && Object.entries(msg.reactions).map(([emoji, count]) => (
-                    <div key={emoji} className="flex items-center mr-2">
-                      <span className="text-xl">{emoji}</span>
-                      <span className="ml-1 text-sm">{count}</span>
+                <div className="flex items-center mt-2">
+                  {msg.reactions && msg.reactions.map((reaction, index) => (
+                    <div key={index} className="flex items-center mr-2">
+                      <span className="text-xl">{reaction.emoji}</span>
+                      <span className="ml-1 text-sm">{reaction.count}</span>
                     </div>
                   ))}
-                  <button onClick={() => setEmojiPickerVisible(!emojiPickerVisible)}>
+                  <button onClick={() => toggleEmojiPicker(msg.id)} className="ml-2">
                     <FaRegSmile />
                   </button>
-                </div> */}
+                </div>
               </div>
             ))}
             <div ref={messageEndRef} />
@@ -180,7 +203,11 @@ const Chat = () => {
               <FaPaperPlane />
             </button>
           </form>
-          {emojiPickerVisible && <Picker onEmojiClick={handleEmojiClick} />}
+          {emojiPickerVisible && (
+            <div className="absolute bottom-0 right-0">
+              <Picker onEmojiClick={handleEmojiClick} />
+            </div>
+          )}
         </div>
       </div>
     </div>
