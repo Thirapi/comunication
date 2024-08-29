@@ -95,30 +95,6 @@ const Chat = () => {
     setReplyTo(null); // Batalkan balasan
   };
 
-  useEffect(() => {
-    // Registrasi Service Worker
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('../service-worker.js')
-        .then((registration) => {
-          console.log('Service Worker registered with scope:', registration.scope);
-
-          // Subscription untuk notifikasi
-          return registration.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: 'BGFgxa9eB4pCv-d-u6cwQWm4B40KHzlSMnmbLXkDBMvR_so6HOCGytBlPL5Ax-a9hd6tHnKbEyelKX7XroL2Ygg' // Gantilah dengan VAPID Public Key Anda
-          });
-        })
-        .then((subscription) => {
-          // Kirim subscription ke backend
-          return axios.post(`${import.meta.env.VITE_API_URL}/subscribe`, subscription);
-        })
-        .catch((error) => {
-          console.error('Subscription failed:', error);
-        });
-    }
-  }, []);
-
-
   return (
     <div className="min-h-screen flex flex-col items-center bg-slate-900"
       style={{
