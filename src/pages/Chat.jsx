@@ -103,10 +103,11 @@ const Chat = () => {
         backgroundPosition: 'center center',
         backgroundAttachment: 'fixed'
       }}>
-      <div className="text-white rounded shadow-md p-8 w-full mx-auto max-w-4xl h-[calc(100vh-4rem)] border-solid border-slate-600 border-2 shadow-lg rounded-md flex flex-col"
+      <div className="text-white rounded shadow-md p-8 w-full mx-auto max-w-4xl border-solid border-slate-600 border-2 shadow-lg rounded-md flex flex-col"
       style={{
         backgroundColor: '#181818',
-        borderTop: 'none'
+        borderTop: 'none',
+        height: '100vh'
       }}
       >
         {/* <div className="flex justify-between items-center mb-6 text-white">
