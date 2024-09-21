@@ -155,6 +155,7 @@ const Chat = () => {
             </div>
           )}
         </div>
+      </div>
         <form onSubmit={handleSubmit} className="w-full mx-auto max-w-4xl flex items-center p-2">
             <input
               type="text"
@@ -168,7 +169,6 @@ const Chat = () => {
               <FiSend />
             </button>
           </form>
-      </div>
     </div>
   );  
 };
