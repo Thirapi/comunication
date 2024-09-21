@@ -103,10 +103,11 @@ const Chat = () => {
         backgroundPosition: 'center center',
         backgroundAttachment: 'fixed'
       }}>
-      <div className="text-white rounded shadow-md w-full mx-auto max-w-4xl border-solid border-slate-600 border-2 shadow-lg rounded-md flex flex-col"
+      <div className="text-white shadow-md w-full mx-auto max-w-4xl border-solid border-slate-600 border-2 shadow-lg flex flex-col"
       style={{
         backgroundColor: '#181818',
         borderTop: 'none',
+        borderRadius: '0 40px',
         height: '100vh',
         padding: '0 2rem 1rem 2rem'
       }}
