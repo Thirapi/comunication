@@ -107,7 +107,7 @@ const Chat = () => {
       style={{
         backgroundColor: '#181818',
         borderTop: 'none',
-        borderRadius: '0 40px',
+        borderRadius: '0 40px 0 40px',
         height: '100vh',
         padding: '0 2rem 1rem 2rem'
       }}
