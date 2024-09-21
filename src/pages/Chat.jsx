@@ -103,20 +103,21 @@ const Chat = () => {
         backgroundPosition: 'center center',
         backgroundAttachment: 'fixed'
       }}>
-      <div className="text-white rounded shadow-md p-8 w-full mx-auto max-w-4xl h-[calc(100vh-4rem)] border-solid border-slate-600 border-1 shadow-lg rounded-md flex flex-col"
+      <div className="text-white rounded shadow-md p-8 w-full mx-auto max-w-4xl h-[calc(100vh-4rem)] border-solid border-slate-600 border-2 shadow-lg rounded-md flex flex-col"
       style={{
-        backgroundColor: '#181818'
+        backgroundColor: '#181818',
+        borderTop: 'none'
       }}
       >
         <div className="flex justify-between items-center mb-6 text-white">
-          <h1 className="text-2xl font-bold">Komunikasi</h1>
+          {/* <h1 className="text-2xl font-bold">Komunikasi</h1>
           <button
             onClick={handleLogout}
             className="text-rose-800 py-2 px-4 border border-rose-800 rounded-md hover:bg-rose-800 hover:text-white transition-colors"
           >
             Logout
           </button>
-        </div>
+        </div> */}
         <div className="flex-1 flex flex-col overflow-hidden">
           <div className="overflow-y-auto flex-1 mb-4">
             {messages.map((msg) => (
@@ -143,6 +144,7 @@ const Chat = () => {
             ))}
             <div ref={messageEndRef} />
           </div>
+        </div>
           {replyTo && (
             <div className="bg-slate-700 p-2 mb-2 rounded text-sm">
               Membalas <strong>{replyTo.username}</strong>: {replyTo.message}
@@ -154,8 +156,6 @@ const Chat = () => {
               </button>
             </div>
           )}
-        </div>
-      </div>
         <form onSubmit={handleSubmit} className="w-full mx-auto max-w-4xl flex items-center p-2">
             <input
               type="text"
@@ -169,6 +169,7 @@ const Chat = () => {
               <FiSend />
             </button>
           </form>
+      </div>
     </div>
   );  
 };
