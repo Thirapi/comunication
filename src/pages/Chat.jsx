@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import axios from 'axios';
 import Pusher from 'pusher-js';
 import { useNavigate } from 'react-router-dom';
@@ -6,21 +6,30 @@ import image from '/src/assets/image.png';
 import dayjs from 'dayjs';
 import { FiCornerUpLeft, FiSend, FiCornerDownRight } from "react-icons/fi";
 
+// Debounce helper
+const debounce = (func, delay) => {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), delay);
+  };
+};
+
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
-  const [replyTo, setReplyTo] = useState(null); // State untuk pesan yang dibalas
+  const [replyTo, setReplyTo] = useState(null);
   const [token, setToken] = useState(null);
-  const [username, setUsername] = useState(null); // Tambahkan state untuk username
+  const [username, setUsername] = useState(null);
   const messageEndRef = useRef(null);
-  const navigate = useNavigate(); // Use navigate hook
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
-    const storedUsername = localStorage.getItem('username'); // Ambil username dari localStorage
+    const storedUsername = localStorage.getItem('username');
 
     setToken(storedToken);
-    setUsername(storedUsername); // Set username
+    setUsername(storedUsername);
 
     const fetchMessages = async () => {
       try {
@@ -42,12 +51,12 @@ const Chat = () => {
     });
 
     const channel = pusher.subscribe('chat');
-    channel.bind('message', (data) => {
+    channel.bind('message', debounce((data) => {
       setMessages((prevMessages) => {
         const updatedMessages = [...prevMessages, data];
         return updatedMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
       });
-    });
+    }, 300)); // Added debounce to avoid too many updates at once
 
     return () => {
       channel.unbind_all();
@@ -55,10 +64,34 @@ const Chat = () => {
     };
   }, []);
 
+  // Optimized scroll handler
   useEffect(() => {
     if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
+  }, [messages]);
+
+  // Memoized message list to avoid unnecessary re-renders
+  const memoizedMessages = useMemo(() => {
+    return messages.map((msg) => (
+      <div key={msg.id} className="mb-1 p-2 rounded transition-colors duration-200 hover:bg-slate-900">
+        <div className="flex items-center mb-1">
+          <strong className="mr-2">{msg.username}</strong>
+          <span className="text-gray-500 text-sm">{dayjs(msg.created_at).format('DD/MM/YYYY h:mm A')}</span>
+          <button onClick={() => handleReply(msg)} className="text-sm text-white flex items-center">
+            <FiCornerUpLeft className="ml-2" /> balas
+          </button>
+        </div>
+        {msg.reply_to_message && (
+          <div className="py-1 rounded mb-2 text-sm flex items-center" style={{ backgroundColor: '#1E1E1E' }}>
+            <FiCornerDownRight className="mr-2" />
+            <strong className="mr-1">{msg.reply_to_username}:</strong>
+            <span>{msg.reply_to_message}</span>
+          </div>
+        )}
+        <div>{msg.message}</div>
+      </div>
+    ));
   }, [messages]);
 
   const handleSubmit = async (e) => {
@@ -66,14 +99,14 @@ const Chat = () => {
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/messages`, { 
         message, 
-        replyTo: replyTo ? replyTo.id : null  // Kirim ID pesan yang sedang dibalas, jika ada
+        replyTo: replyTo ? replyTo.id : null
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
       const newMessage = response.data;
 
-      // Reset input dan replyTo setelah mengirim pesan
+      // Reset input and replyTo after sending message
       setMessage('');
       setReplyTo(null);
     } catch (error) {
@@ -87,99 +120,63 @@ const Chat = () => {
   };
 
   const handleReply = (msg) => {
-    setReplyTo(msg); // Set pesan yang sedang dibalas
+    setReplyTo(msg); // Set reply-to message
   };
 
   const handleCancelReply = () => {
-    setReplyTo(null); // Batalkan balasan
+    setReplyTo(null); // Cancel reply
   };
 
   return (
     <div className="min-h-screen flex flex-col items-center"
       style={{
         backgroundColor: '#0A0A0A',
-        // backgroundImage: `url(${image})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center center',
         backgroundAttachment: 'fixed'
       }}>
       <div className="text-white shadow-md w-full mx-auto max-w-4xl border-solid border-slate-600 border-2 shadow-lg flex flex-col"
-      style={{
-        backgroundColor: '#181818',
-        borderTop: 'none',
-        borderRadius: '0 0 40px 40px',
-        height: '100vh',
-        padding: '0 2rem 1rem 2rem'
-      }}
-      >
-        {/* <div className="flex justify-between items-center mb-6 text-white">
-          <h1 className="text-2xl font-bold">Komunikasi</h1>
-          <button
-            onClick={handleLogout}
-            className="text-rose-800 py-2 px-4 border border-rose-800 rounded-md hover:bg-rose-800 hover:text-white transition-colors"
-          >
-            Logout
-          </button>
-        </div> */}
+        style={{
+          backgroundColor: '#181818',
+          borderTop: 'none',
+          borderRadius: '0 0 40px 40px',
+          height: '100vh',
+          padding: '0 2rem 1rem 2rem'
+        }}>
         <div className="flex-1 flex flex-col overflow-hidden">
           <div className="overflow-y-auto flex-1 mb-4"
-          style={{
-           msOverflowStyle: 'none',
-           scrollbarWidth: 'none'
-          }}
-          >
-            {messages.map((msg) => (
-              <div key={msg.id} className="mb-1 p-2 rounded transition-colors duration-200 hover:bg-slate-900">
-                <div className="flex items-center mb-1">
-                  <strong className="mr-2">{msg.username}</strong>
-                  <span className="text-gray-500 text-sm">{dayjs(msg.created_at).format('DD/MM/YYYY h:mm A')}</span>
-                  <button 
-                  onClick={() => handleReply(msg)} 
-                  className="text-sm text-white flex items-center"
-                >
-                  <FiCornerUpLeft className="ml-2" /> balas
-                </button>
-                </div>
-                {msg.reply_to_message && (
-                  <div className="py-1 rounded mb-2 text-sm flex items-center" style={{backgroundColor: '#1E1E1E'}}>
-                    <FiCornerDownRight className="mr-2" />
-                    <strong className="mr-1">{msg.reply_to_username}:</strong>
-                    <span>{msg.reply_to_message}</span>
-                  </div>
-                )}
-                <div>{msg.message}</div>
-              </div>
-            ))}
+            style={{
+              msOverflowStyle: 'none',
+              scrollbarWidth: 'none'
+            }}>
+            {memoizedMessages}
             <div ref={messageEndRef} />
           </div>
         </div>
-          {replyTo && (
-            <div className="bg-slate-700 p-2 mb-2 rounded text-sm">
-              Membalas <strong>{replyTo.username}</strong>: {replyTo.message}
-              <button 
-                onClick={handleCancelReply} 
-                className="text-sm text-red-400 hover:underline ml-2"
-              >
-                Batalkan
-              </button>
-            </div>
-          )}
-        <form onSubmit={handleSubmit} className="w-full mx-auto max-w-4xl flex items-center p-2">
-            <input
-              type="text"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              className="flex-grow px-4 py-2 text-black border rounded-full mr-2"
-              placeholder="Type your message..."
-              required
-            />
-            <button type="submit" className="bg-blue-500 text-white p-3 rounded-full">
-              <FiSend />
+        {replyTo && (
+          <div className="bg-slate-700 p-2 mb-2 rounded text-sm">
+            Membalas <strong>{replyTo.username}</strong>: {replyTo.message}
+            <button onClick={handleCancelReply} className="text-sm text-red-400 hover:underline ml-2">
+              Batalkan
             </button>
-          </form>
+          </div>
+        )}
+        <form onSubmit={handleSubmit} className="w-full mx-auto max-w-4xl flex items-center p-2">
+          <input
+            type="text"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            className="flex-grow px-4 py-2 text-black border rounded-full mr-2"
+            placeholder="Type your message..."
+            required
+          />
+          <button type="submit" className="bg-blue-500 text-white p-3 rounded-full">
+            <FiSend />
+          </button>
+        </form>
       </div>
     </div>
-  );  
+  );
 };
 
 export default Chat;
