@@ -122,7 +122,12 @@ const Chat = () => {
           </button>
         </div> */}
         <div className="flex-1 flex flex-col overflow-hidden">
-          <div className="overflow-y-auto flex-1 mb-4">
+          <div className="overflow-y-auto flex-1 mb-4"
+          style={{
+           msOverflowStyle: 'none',
+           scrollbarWidth: 'none'
+          }}
+          >
             {messages.map((msg) => (
               <div key={msg.id} className="mb-4 p-2 rounded transition-colors duration-200 hover:bg-slate-900">
                 <div className="flex items-center mb-1">
