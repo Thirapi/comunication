@@ -4,7 +4,6 @@ import Pusher from 'pusher-js';
 import { useNavigate } from 'react-router-dom';
 import image from '/src/assets/image.png';
 import dayjs from 'dayjs';
-// import { FaPaperPlane, FaReply } from 'react-icons/fa';
 import { FiCornerUpLeft, FiSend, FiCornerDownRight } from "react-icons/fi";
 
 const Chat = () => {
@@ -96,14 +95,19 @@ const Chat = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-slate-900"
+    <div className="min-h-screen flex flex-col items-center"
       style={{
-        backgroundImage: `url(${image})`,
+        backgroundColor: '#0A0A0A',
+        // backgroundImage: `url(${image})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center center',
         backgroundAttachment: 'fixed'
       }}>
-      <div className="bg-slate-800 text-white rounded shadow-md p-8 w-full mx-auto max-w-4xl my-8 h-[calc(100vh-4rem)] border-solid border-slate-300 border-2 shadow-lg rounded-md flex flex-col">
+      <div className="text-white rounded shadow-md p-8 w-full mx-auto max-w-4xl h-[calc(100vh-4rem)] border-solid border-slate-600 border-1 shadow-lg rounded-md flex flex-col"
+      style={{
+        backgroundColor: '#181818'
+      }}
+      >
         <div className="flex justify-between items-center mb-6 text-white">
           <h1 className="text-2xl font-bold">Komunikasi</h1>
           <button
@@ -150,7 +154,8 @@ const Chat = () => {
               </button>
             </div>
           )}
-          <form onSubmit={handleSubmit} className="w-full flex items-center p-2">
+        </div>
+        <form onSubmit={handleSubmit} className="w-full mx-auto max-w-4xl flex items-center p-2">
             <input
               type="text"
               value={message}
@@ -163,7 +168,6 @@ const Chat = () => {
               <FiSend />
             </button>
           </form>
-        </div>
       </div>
     </div>
   );  
