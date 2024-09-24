@@ -14,7 +14,7 @@ const Register = () => {
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/register`, { username, password });
       console.log('Registration successful:', response.data);
-      navigate('/chat');
+      navigate('/');
     } catch (error) {
       console.error('Error:', error.response.data);
       setError(error.response.data.message);
