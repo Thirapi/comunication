@@ -7,12 +7,14 @@ const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/register`, { username, password });
       console.log('Registration successful:', response.data);
+      navigate('/chat');
     } catch (error) {
       console.error('Error:', error.response.data);
       setError(error.response.data.message);
