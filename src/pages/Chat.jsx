@@ -112,6 +112,15 @@ const Chat = () => {
         padding: '0 2rem 1rem 2rem'
       }}
       >
+        {/* <div className="flex justify-between items-center mb-6 text-white">
+          <h1 className="text-2xl font-bold">Komunikasi</h1>
+          <button
+            onClick={handleLogout}
+            className="text-rose-800 py-2 px-4 border border-rose-800 rounded-md hover:bg-rose-800 hover:text-white transition-colors"
+          >
+            Logout
+          </button>
+        </div> */}
         <div className="flex-1 flex flex-col overflow-hidden">
           <div className="overflow-y-auto flex-1 mb-4"
           style={{
